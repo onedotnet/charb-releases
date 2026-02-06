@@ -54,4 +54,8 @@ fi
 
 echo ""
 echo "charb installed to ${INSTALL_DIR}/${BINARY}"
-echo "Run 'charb --help' to get started"
+echo ""
+echo "Next steps:"
+echo "  charb login"
+echo "  charb run claude   # or codex, gemini"
+echo "  charb --help"
