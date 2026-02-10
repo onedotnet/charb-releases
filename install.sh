@@ -9,7 +9,15 @@ INSTALL_DIR="${CHARB_INSTALL_DIR:-/usr/local/bin}"
 OS="$(uname -s)"
 ARCH="$(uname -m)"
 
+# Handle Windows (Git Bash, WSL, or Cygwin)
+# On Windows with Git Bash, OS might be MINGW*, MSYS*, or CYGWIN*
 case "$OS" in
+  MINGW*|MSYS*|CYGWIN*)
+    PLATFORM="windows"
+    BINARY="${BINARY}.exe"
+    # For Windows x64, we use the x64 binary
+    ARCH="x64"
+    ;;
   Linux)  PLATFORM="linux" ;;
   Darwin) PLATFORM="darwin" ;;
   *)      echo "Error: Unsupported OS: $OS"; exit 1 ;;
@@ -42,7 +50,12 @@ else
   exit 1
 fi
 
-chmod +x "${TMP_DIR}/${BINARY}"
+# On Windows, the .exe file is already executable
+# On Unix-like systems, make it executable
+case "$OS" in
+  MINGW*|MSYS*|CYGWIN*) ;;
+  *) chmod +x "${TMP_DIR}/${BINARY}" ;;
+esac
 
 # Install
 if [ -w "$INSTALL_DIR" ]; then
